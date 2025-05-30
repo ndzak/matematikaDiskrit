@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda Aplikasi Matematika</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header dan Profil */
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 60px 0 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .profile-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            margin: 0px auto;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #6a11cb;
+            overflow: hidden; /* Tambahkan ini */
+            position: relative; /* Untuk positioning child */
+        }
+
+        .profile-image img{
+            width: 100%;
+            height: 100%; /* Tambahkan ini */
+            object-fit: cover; /* Pastikan gambar menutupi area */
+            display: block; /* Hilangkan space bawah */
+            position: absolute; /* Optional: untuk pastikan fill penuh */
+            top: 0;
+            left: 0;
+            transform: translate(5%, -30%) scale(3);
+        }
+
+        .profile h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .profile h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .profile p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Deskripsi Aplikasi */
+        .app-description {
+            padding: 50px 0;
+            text-align: left;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-description::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc, #6a11cb);
+            background-size: 200% 200%;
+            animation: gradientMove 8s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-description h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        .app-description h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #2575fc;
+        }
+
+        .app-description h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2575fc;
+            margin-top: 20px;
+        }
+
+        .description-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .app-description ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+            list-style-type: none;
+        }
+        
+        .app-description li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .app-description li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #2575fc;
+            font-weight: bold;
+        }
+
+        .built-with {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 4px solid #2575fc;
+        }
+
+        .thanks {
+            margin-top: 25px;
+            font-style: italic;
+            text-align: center;
+            color: #666;
+        }
+
+        .app-description p {
+            font-size: 1.1rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .title-app{
+            font-size: 2rem;
+            color: #333;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .app-description h2 {
+                font-size: 1.8rem;
+            }
+            
+            .description-content {
+                padding: 15px;
+            }
+        }
+
+        /* Tombol-tombol Aplikasi */
+        .app-buttons {
+            padding: 50px 0 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-button {
+            width: 300px;
+            height: 200px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Tombol Minimalis Probabilitas Dadu */
+        .dice-button {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .dice-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .dice-button .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #2575fc;
+        }
+
+        .dice-button .button-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* Tombol Retro Pixelated Teori Himpunan */
+        .set-button {
+            background-color: #209cee;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            border: 4px solid #ffdd57;
+            box-shadow: 0 6px 0 #116699, 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .set-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 0 #116699, 0 14px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .set-button .icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: #ffdd57;
+            filter: drop-shadow(2px 2px 0 #116699);
+        }
+
+        .set-button .button-title {
+            font-size: 1rem;
+            text-shadow: 2px 2px 0 #116699;
+            letter-spacing: -1px;
+        }
+
+        /* Pixelated dots background for retro button */    
+        .set-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .set-button .icon, .set-button .button-title {
+            position: relative;
+            z-index: 2;
+        }
+
+         /* Tombol Retro Pixelated Teori Himpunan */
+         .fk-button {
+            background-color: #faae2b;
+            color: black;
+            font-family: 'IBM Plex Mono', monospace;
+            border: 3px solid black;
+            box-shadow: 17px 17px 0 0px black, 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .fk-button .icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: black;
+        }
+
+        .fk-button .button-title {
+            font-size: 1rem;
+            letter-spacing: -1px;
+        }
+
+        /* Pixelated dots background for retro button */
+        .fk-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: 10px 10px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .fk-button .icon, .fk-button .button-title {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile h1 {
+                font-size: 2rem;
+            }
+
+            .app-description h2 {
+                font-size: 1.8rem;
+            }
+
+            .app-buttons {
+                padding: 40px 20px 60px;
+            }
+
+            .app-button {
+                width: 100%;
+                max-width: 300px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 40px 0 20px;
+            }
+
+            .profile-image {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+
+            .profile h1 {
+                font-size: 1.8rem;
+            }
+
+            .profile p, .app-description p {
+                font-size: 1rem;
+            }
+
+            .app-description {
+                padding: 40px 15px;
+            }
+
+            .app-button {
+                height: 160px;
+            }
+
+            .dice-button .icon {
+                font-size: 2.5rem;
+            }
+
+            .set-button .icon {
+                font-size: 2rem;
+            }
+
+            .set-button .button-title {
+                font-size: 0.9rem;
+            }
+            .fk-button .icon {
+                font-size: 2rem;
+            }
+
+            .fk-button .button-title {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="profile">
+            <div class="profile-image">
+                <img src="profile.jpg" alt="">
+            </div>
+            <h1>Noufal Dzaky - 411232068</h1>
+            <p>Halaman ini dibuat sebagai platform penghubung antara dua project saya yang berkaitan dengan penerapan konsep Matematika Diskrit. Pembuatan halaman ini merupakan bagian dari Tugas Besar mata kuliah Matematika Diskrit yang diampu oleh Ibu Masnia, M.Pd.</p>
+        </div>
+    </header>
+
+    <section class="app-description">
+        <div class="container">
+            <h2>Eksplorasi Matematika Diskrit</h2>
+            <div class="description-content">
+                <div class="goals">
+                    <h3>Tujuan utama halaman ini adalah:</h3>
+                    <ul>
+                        <li><strong>Mengintegrasikan</strong> dua project terkait teori graf, logika, atau kombinatorik.</li>
+                        <li><strong>Memvisualisasikan</strong> konsep matematika diskrit secara interaktif.</li>
+                        <li><strong>Memenuhi tugas</strong> dengan pendekatan kreatif berbasis web development.</li>
+                    </ul>
+                </div>
+                
+                <div class="elements">
+                    <h3>Halaman ini menggabungkan elemen-elemen:</h3>
+                    <ul>
+                        <li><strong>Algoritma</strong> (penerapan teori graf/pohon)</li>
+                        <li><strong>Visualisasi Interaktif</strong> (animasi CSS/JS)</li>
+                        <li><strong>Logika Diskrit</strong> (implementasi dalam kode)</li>
+                    </ul>
+                </div>
+                
+                <div class="built-with">
+                    <p>Dibangun dengan: 🛠️ <em>HTML, CSS, JavaScript</em></p>
+                </div>
+                
+                <div class="thanks">
+                    <p><em>"Terima kasih kepada Ibu Masnia, M.Pd. atas bimbingannya dalam mata kuliah ini."</em></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <h2 class="title-app">Aplikasi</h2>
+    <section class="app-buttons">
+        <div class="button-container">
+            <a href="peluang-dadu/index.html" class="app-button dice-button">
+                <div class="icon">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <div class="button-title">Probabilitas Dadu</div>
+            </a>
+        </div>
+        <div class="button-container">
+            <a href="teori-himpunan/index.html" class="app-button set-button">
+                <div class="icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="button-title">TEORI HIMPUNAN</div>
+            </a>
+        </div>
+        <div class="button-container">
+            <a href="fpb-kpk/index.html" class="app-button fk-button">
+            <div class="icon">
+                <i class="fas fa-calculator"></i>
+            </div>
+            <div class="button-title">Kalkulator FPB - KPK</div>
+            </a>
+        </div>
+  
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Aplikasi Pembelajaran Matematika</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const setButton = document.querySelector('.set-button');
+            if (setButton) {
+                setButton.addEventListener('mousedown', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 4px 0 #116699, 0 10px 15px rgba(0, 0, 0, 0.2)';
+                });
+                
+                setButton.addEventListener('mouseup', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 8px 0 #116699, 0 14px 25px rgba(0, 0, 0, 0.2)';
+                });
+                
+                setButton.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '0 6px 0 #116699, 0 12px 20px rgba(0, 0, 0, 0.15)';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

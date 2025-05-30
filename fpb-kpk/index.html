@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator FPB & KPK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #F53699;
+            --secondary: #5D5FEF;
+            --accent: #FFD600;
+            --text-dark: #191919;
+            --background: #F5F5F7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 520px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border: 3px solid var(--text-dark);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            box-shadow: 6px 6px 0 var(--text-dark);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 3px solid var(--text-dark);
+            border-radius: 8px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(245, 54, 153, 0.3);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary);
+            color: white;
+            border: 3px solid var(--text-dark);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--text-dark);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+        
+        .button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 var(--text-dark);
+            background-color: #e01f85;
+        }
+        
+        .button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0 var(--text-dark);
+        }
+        
+        .result-card {
+            background-color: white;
+            border: 3px solid var(--text-dark);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            box-shadow: 6px 6px 0 var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border: 3px solid var(--text-dark);
+            border-radius: 8px;
+            background-color: var(--accent);
+        }
+        
+        .result-item.fpb {
+            background-color: var(--accent);
+        }
+        
+        .result-item.kpk {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .result-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 900;
+            padding: 8px 16px;
+            background-color: white;
+            border: 2px solid var(--text-dark);
+            border-radius: 6px;
+            color: var(--text-dark);
+            min-width: 90px;
+            text-align: center;
+        }
+        
+        .steps {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            background-color: #f0f0f5;
+            padding: 16px;
+            border: 2px solid var(--text-dark);
+            border-radius: 8px;
+        }
+        
+        .steps-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .steps-content {
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error {
+            color: #E53935;
+            font-weight: 600;
+            margin-top: 6px;
+            font-size: 0.9rem;
+            background-color: rgba(229, 57, 53, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #E53935;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .card, .result-card {
+                padding: 20px 16px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div>
+            <h1 class="title">Kalkulator FPB & KPK</h1>
+            <p class="subtitle">Hitung FPB dan KPK dari dua bilangan dengan mudah</p>
+        </div>
+        
+        <div class="card">
+            <div class="input-group">
+                <label for="number1">Bilangan Pertama</label>
+                <input type="number" id="number1" placeholder="Masukkan bilangan bulat positif" min="1">
+                <div class="error hidden" id="error1">Masukkan bilangan bulat positif!</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="number2">Bilangan Kedua</label>
+                <input type="number" id="number2" placeholder="Masukkan bilangan bulat positif" min="1">
+                <div class="error hidden" id="error2">Masukkan bilangan bulat positif!</div>
+            </div>
+            
+            <button class="button" id="calculate">Hitung</button>
+        </div>
+        
+        <div class="result-card hidden" id="result">
+            <h2 class="result-title">Hasil Perhitungan</h2>
+            
+            <div class="result-item fpb">
+                <span class="result-label">FPB</span>
+                <span class="result-value" id="fpb-result">-</span>
+            </div>
+            
+            <div class="result-item kpk">
+                <span class="result-label">KPK</span>
+                <span class="result-value" id="kpk-result">-</span>
+            </div>
+            
+            <div class="steps">
+                <div class="steps-title">Cara Perhitungan:</div>
+                <div class="steps-content" id="steps-content"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Kalkulator FPB & KPK © 2025
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate');
+            const number1Input = document.getElementById('number1');
+            const number2Input = document.getElementById('number2');
+            const error1 = document.getElementById('error1');
+            const error2 = document.getElementById('error2');
+            const resultDiv = document.getElementById('result');
+            const fpbResult = document.getElementById('fpb-result');
+            const kpkResult = document.getElementById('kpk-result');
+            const stepsContent = document.getElementById('steps-content');
+            
+            function calculateGCD(a, b) {
+                if (a === 0) return { result: b, steps: [`FPB(0, ${b}) = ${b}`] };
+                if (b === 0) return { result: a, steps: [`FPB(${a}, 0) = ${a}`] };
+                
+                a = Math.abs(a);
+                b = Math.abs(b);
+                
+                const originalA = a;
+                const originalB = b;
+                
+                let steps = [`Mencari FPB(${originalA}, ${originalB}) dengan algoritma Euclidean:`];
+                
+                while (b !== 0) {
+                    steps.push(`${a} ÷ ${b} = ${Math.floor(a/b)} dengan sisa ${a % b}`);
+                    const temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                
+                steps.push(`Ketika sisa = 0, maka FPB(${originalA}, ${originalB}) = ${a}`);
+                
+                return {
+                    result: a,
+                    steps: steps
+                };
+            }
+            
+            function calculateLCM(a, b) {
+                if (a === 0 || b === 0) return { 
+                    result: 0, 
+                    steps: [`KPK(${a}, ${b}) = 0 karena salah satu bilangan adalah 0`] 
+                };
+                
+                a = Math.abs(a);
+                b = Math.abs(b);
+                
+                const gcdData = calculateGCD(a, b);
+                const gcd = gcdData.result;
+                const lcm = Math.floor((a * b) / gcd);
+                
+                const steps = [
+                    `Mencari KPK(${a}, ${b}):`,
+                    `KPK = (${a} × ${b}) ÷ FPB(${a}, ${b})`,
+                    `KPK = (${a} × ${b}) ÷ ${gcd}`,
+                    `KPK = ${a * b} ÷ ${gcd}`,
+                    `KPK = ${lcm}`
+                ];
+                
+                return {
+                    result: lcm,
+                    steps: steps
+                };
+            }
+            
+            calculateBtn.addEventListener('click', function() {
+                error1.classList.add('hidden');
+                error2.classList.add('hidden');
+                
+                const num1 = parseInt(number1Input.value);
+                const num2 = parseInt(number2Input.value);
+                
+                let isValid = true;
+                
+                if (!number1Input.value || isNaN(num1) || num1 <= 0 || !Number.isInteger(num1)) {
+                    error1.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                if (!number2Input.value || isNaN(num2) || num2 <= 0 || !Number.isInteger(num2)) {
+                    error2.classList.remove('hidden');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    const gcdData = calculateGCD(num1, num2);
+                    const lcmData = calculateLCM(num1, num2);
+                    
+                    fpbResult.textContent = gcdData.result;
+                    kpkResult.textContent = lcmData.result;
+                    
+                    stepsContent.innerHTML = `
+                        <strong>Langkah FPB:</strong>
+                        <p>${gcdData.steps.join('<br>')}</p>
+                        <br>
+                        <strong>Langkah KPK:</strong>
+                        <p>${lcmData.steps.join('<br>')}</p>
+                    `;
+                    
+                    resultDiv.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            });
+            
+            number1Input.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (this.value && !isNaN(value) && value > 0 && Number.isInteger(value)) {
+                    error1.classList.add('hidden');
+                }
+            });
+            
+            number2Input.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (this.value && !isNaN(value) && value > 0 && Number.isInteger(value)) {
+                    error2.classList.add('hidden');
+                }
+            });
+            
+            number1Input.focus();
+        });
+    </script>
+</body>
+</html>

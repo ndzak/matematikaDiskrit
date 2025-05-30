@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Teori Himpunan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --secondary: #00ffff;
+            --accent: #ff0066;
+            --dark: #333333;
+            --light: #f8f8f8;
+            --border: #000000;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                               linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .pixel-border {
+            border: 4px solid var(--border);
+            position: relative;
+            padding: 16px;
+            margin: 16px 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 0 4px var(--primary);
+        }
+        
+        .pixel-border::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 2px solid var(--border);
+            z-index: -1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: blink 5s infinite;
+        }
+        
+        .logo {
+            margin: 20px auto;
+            width: 120px;
+            height: 100px;
+            position: relative;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 28px;
+            text-shadow: 4px 4px 0 var(--border);
+            margin: 10px 0;
+            letter-spacing: -2px;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            color: var(--secondary);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"] {
+            font-family: 'Press Start 2P', cursive;
+            padding: 10px;
+            background-color: var(--light);
+            border: 4px solid var(--border);
+            color: var(--dark);
+            font-size: 12px;
+        }
+        
+        .nes-btn {
+            font-family: 'Press Start 2P', cursive;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: var(--dark);
+            border: 4px solid var(--border);
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+            margin: 10px 0;
+            transition: all 0.2s;
+        }
+        
+        .nes-btn:hover {
+            background-color: var(--accent);
+            animation: blink 1s infinite;
+        }
+        
+        .nes-btn:active {
+            transform: translateY(4px);
+        }
+        
+        .results {
+            margin-top: 30px;
+        }
+        
+        .result-group {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .result-label {
+            color: var(--secondary);
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .result-value {
+            color: var(--light);
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            font-size: 12px;
+            border: 2px dashed var(--secondary);
+            word-break: break-all;
+        }
+        
+        .venn-diagram {
+            width: 100%;
+            height: 300px;
+            margin: 20px auto;
+            display: block;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 4px solid var(--border);
+        }
+        
+        .error {
+            color: var(--accent);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 10px;
+            color: var(--secondary);
+            padding: 10px;
+        }
+        
+        @keyframes blink {
+            0%, 49% {
+                opacity: 1;
+            }
+            50%, 100% {
+                opacity: 0.7;
+            }
+        }
+        
+        /* CRT Effect */
+        .crt::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            /* animation: flicker 0.15s infinite; */
+        }
+
+        .play-container{
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+
+        .play-button{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .play-button img {
+            width: 30%;
+            position: relative;
+            transition: all 0.5s ease-in-out; /* Tambahkan transisi untuk perubahan properti */
+        }
+
+        .play-button img:hover {
+            cursor: pointer;
+            opacity: 0.8;
+            transform: translateY(-30px); /* Gunakan transform langsung pada hover */
+            animation: none; /* Nonaktifkan animasi saat hover */
+        }
+        .main-content{
+            display: none;
+        }
+
+        .fade-out {
+            animation: fadeOut 2s forwards;
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; display: none; z-index:0;}
+        }
+
+        
+        
+        @keyframes flicker {
+            0% { opacity: 0.27861; }
+            5% { opacity: 0.34769; }
+            10% { opacity: 0.23604; }
+            15% { opacity: 0.90626; }
+            20% { opacity: 0.18128; }
+            25% { opacity: 0.83891; }
+            30% { opacity: 0.65583; }
+            35% { opacity: 0.67807; }
+            40% { opacity: 0.26559; }
+            45% { opacity: 0.84693; }
+            50% { opacity: 0.96019; }
+            55% { opacity: 0.08594; }
+            60% { opacity: 0.20313; }
+            65% { opacity: 0.71988; }
+            70% { opacity: 0.53455; }
+            75% { opacity: 0.37288; }
+            80% { opacity: 0.71428; }
+            85% { opacity: 0.70419; }
+            90% { opacity: 0.7003; }
+            95% { opacity: 0.36108; }
+            100% { opacity: 0.24387; }
+        }
+    </style>
+</head>
+<body class="crt">
+    <div class="play-container" id="play-container">
+        <div class="play-button" id="play-button"><img src="start.png" alt=""></div>
+    </div>
+    <div class="main-content" id="main-content">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <svg width="120" height="100" viewBox="0 0 120 100">
+                        <circle cx="40" cy="50" r="30" fill="#00ffff" opacity="0.7" stroke="#000000" stroke-width="4" />
+                        <circle cx="80" cy="50" r="30" fill="#ff0066" opacity="0.7" stroke="#000000" stroke-width="4" />
+                        <!-- Pixel style intersection effect -->
+                        <rect x="55" y="35" width="4" height="4" fill="#000000" />
+                        <rect x="59" y="35" width="4" height="4" fill="#000000" />
+                        <rect x="51" y="39" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="39" width="4" height="4" fill="#ffffff" />
+                        <rect x="59" y="39" width="4" height="4" fill="#ffffff" />
+                        <rect x="63" y="39" width="4" height="4" fill="#000000" />
+                        <rect x="51" y="43" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="43" width="4" height="4" fill="#ffffff" />
+                        <rect x="59" y="43" width="4" height="4" fill="#ffffff" />
+                        <rect x="63" y="43" width="4" height="4" fill="#000000" />
+                        <rect x="51" y="47" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="47" width="4" height="4" fill="#ffffff" />
+                        <rect x="59" y="47" width="4" height="4" fill="#ffffff" />
+                        <rect x="63" y="47" width="4" height="4" fill="#000000" />
+                        <rect x="51" y="51" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="51" width="4" height="4" fill="#ffffff" />
+                        <rect x="59" y="51" width="4" height="4" fill="#ffffff" />
+                        <rect x="63" y="51" width="4" height="4" fill="#000000" />
+                        <rect x="51" y="55" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="55" width="4" height="4" fill="#ffffff" />
+                        <rect x="59" y="55" width="4" height="4" fill="#ffffff" />
+                        <rect x="63" y="55" width="4" height="4" fill="#000000" />
+                        <rect x="55" y="59" width="4" height="4" fill="#000000" />
+                        <rect x="59" y="59" width="4" height="4" fill="#000000" />
+                    </svg>
+                </div>
+                <h1>ARENA TEORI HIMPUNAN</h1>
+            </header>
+            
+            <main>
+                
+                <div class="pixel-border">
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label for="setA">Himpunan A (pisahkan dengan koma):</label>
+                            <input type="text" id="setA" placeholder="Contoh: 1,2,3,4" autocomplete="off">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="setB">Himpunan B (pisahkan dengan koma):</label>
+                            <input type="text" id="setB" placeholder="Contoh: 3,4,5,6" autocomplete="off">
+                        </div>
+                        
+                        <button class="nes-btn" id="calculate">HITUNG OPERASI</button>
+                    </div>
+                </div>
+                
+                <div class="pixel-border results">
+                    <div class="result-group">
+                        <div class="result-label">Himpunan A:</div>
+                        <div class="result-value" id="setADisplay">-</div>
+                    </div>
+                    
+                    <div class="result-group">
+                        <div class="result-label">Himpunan B:</div>
+                        <div class="result-value" id="setBDisplay">-</div>
+                    </div>
+                    
+                    <div class="result-group">
+                        <div class="result-label">Gabungan (A ∪ B):</div>
+                        <div class="result-value" id="union">-</div>
+                    </div>
+                    
+                    <div class="result-group">
+                        <div class="result-label">Irisan (A ∩ B):</div>
+                        <div class="result-value" id="intersection">-</div>
+                    </div>
+                    
+                    <div class="result-group">
+                        <div class="result-label">Selisih (A - B):</div>
+                        <div class="result-value" id="differenceAB">-</div>
+                    </div>
+                    
+                    <div class="result-group">
+                        <div class="result-label">Selisih (B - A):</div>
+                        <div class="result-value" id="differenceBA">-</div>
+                    </div>
+                </div>
+                
+                <div class="pixel-border">
+                    <h2 style="color: var(--primary); font-size: 16px; margin-bottom: 15px;">Diagram Venn</h2>
+                    <svg id="vennDiagram" class="venn-diagram" viewBox="0 0 400 300">
+                        <!-- Diagram Venn akan digambar di sini dengan JavaScript -->
+                        <text x="200" y="150" fill="#ffcc00" text-anchor="middle" font-size="14">
+                            Klik "HITUNG OPERASI" untuk menampilkan diagram
+                        </text>
+                    </svg>
+                </div>
+            </main>
+            
+            <footer>
+                © 2025 Dibuat dengan vanilla JS,Jadi scriptnya seabrek abrek❤️ <br> NOUFAL DZAKY 411232068
+            </footer>
+        </div>
+    </div>
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const setAInput = document.getElementById('setA');
+            const setBInput = document.getElementById('setB');
+            const calculateButton = document.getElementById('calculate');
+            
+            const setADisplay = document.getElementById('setADisplay');
+            const setBDisplay = document.getElementById('setBDisplay');
+            const unionDisplay = document.getElementById('union');
+            const intersectionDisplay = document.getElementById('intersection');
+            const differenceABDisplay = document.getElementById('differenceAB');
+            const differenceBADisplay = document.getElementById('differenceBA');
+            const vennDiagram = document.getElementById('vennDiagram');
+            const startButton = document.getElementById('play-button');
+            const playContainer = document.getElementById('play-container');
+            const mainContent = document.getElementById('main-content');
+
+            let audio;
+            function showMainContent(){
+                playContainer.classList.add('fade-out');
+                audio = new Audio('start.wav');
+                audio.play()
+
+                setTimeout(() => {
+
+                mainContent.style.display = "block";
+                
+                // Hentikan audio jika sedang berjalan
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+
+                // Buat objek Audio
+                audio = new Audio('music.mp3'); // Ganti dengan path file musik Anda
+                // Atur waktu awal (30 detik)
+                audio.currentTime = 89.5;
+                audio.volume = 0.4;
+
+
+                // Event ketika audio mencapai 60 detik
+                audio.addEventListener('timeupdate', function() {
+                    if (this.currentTime >= 190) {
+                        this.currentTime = 89.5; // Kembali ke detik 30
+                        this.play(); // Lanjutkan pemutaran
+                        this.volume = 0.4;
+                    }
+                });
+
+                // Mulai pemutaran
+                audio.play().catch(e => {
+                    console.error("Autoplay diblokir:", e);
+                    alert("Klik tombol 'Putar' untuk memulai musik.");
+                });
+                }, 1500);
+            }
+
+            startButton.addEventListener('click', showMainContent);
+        
+            // Parse input string into array, removing duplicates and empty values
+            function parseSetInput(input) {
+                if (!input.trim()) return [];
+                
+                const items = input.split(',').map(item => item.trim());
+                // Filter out empty strings and remove duplicates
+                return [...new Set(items.filter(item => item !== ''))];
+            }
+            
+            // Function to truncate long strings for display purposes
+            function truncateForDisplay(str, maxLength = 10) {
+                if (str.length <= maxLength) return str;
+                return str.substring(0, maxLength - 3) + '...';
+            }
+            
+            // Set operations
+            function union(setA, setB) {
+                return [...new Set([...setA, ...setB])];
+            }
+            
+            function intersection(setA, setB) {
+                return setA.filter(item => setB.includes(item));
+            }
+            
+            function difference(setA, setB) {
+                return setA.filter(item => !setB.includes(item));
+            }
+            
+            // Draw the Venn diagram
+            function drawVennDiagram(setA, setB) {
+                const setAOnly = difference(setA, setB);
+                const setBOnly = difference(setB, setA);
+                const intersectionSet = intersection(setA, setB);
+                
+                // Clear previous diagram
+                vennDiagram.innerHTML = '';
+                
+                // Add styling for the universal set background
+                const universalSet = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                universalSet.setAttribute('x', '20');
+                universalSet.setAttribute('y', '20');
+                universalSet.setAttribute('width', '360');
+                universalSet.setAttribute('height', '260');
+                universalSet.setAttribute('rx', '10');
+                universalSet.setAttribute('ry', '10');
+                universalSet.setAttribute('fill', '#333333');
+                universalSet.setAttribute('stroke', '#ffffff');
+                universalSet.setAttribute('stroke-width', '2');
+                universalSet.setAttribute('stroke-dasharray', '5,5');
+                vennDiagram.appendChild(universalSet);
+                
+                // Draw Set A circle
+                const circleA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circleA.setAttribute('cx', '150');
+                circleA.setAttribute('cy', '150');
+                circleA.setAttribute('r', '100');
+                circleA.setAttribute('fill', '#00ffff');
+                circleA.setAttribute('opacity', '0.7');
+                circleA.setAttribute('stroke', '#000000');
+                circleA.setAttribute('stroke-width', '3');
+                vennDiagram.appendChild(circleA);
+                
+                // Draw Set B circle
+                const circleB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circleB.setAttribute('cx', '250');
+                circleB.setAttribute('cy', '150');
+                circleB.setAttribute('r', '100');
+                circleB.setAttribute('fill', '#ff0066');
+                circleB.setAttribute('opacity', '0.7');
+                circleB.setAttribute('stroke', '#000000');
+                circleB.setAttribute('stroke-width', '3');
+                vennDiagram.appendChild(circleB);
+                
+                // Label for Set A
+                const labelA = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                labelA.setAttribute('x', '100');
+                labelA.setAttribute('y', '80');
+                labelA.setAttribute('fill', '#ffffff');
+                labelA.setAttribute('font-family', '"Press Start 2P", cursive');
+                labelA.setAttribute('font-size', '14');
+                labelA.textContent = 'A';
+                vennDiagram.appendChild(labelA);
+                
+                // Label for Set B
+                const labelB = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                labelB.setAttribute('x', '300');
+                labelB.setAttribute('y', '80');
+                labelB.setAttribute('fill', '#ffffff');
+                labelB.setAttribute('font-family', '"Press Start 2P", cursive');
+                labelB.setAttribute('font-size', '14');
+                labelB.textContent = 'B';
+                vennDiagram.appendChild(labelB);
+                
+                // Add pixel-art style elements for A only (left)
+                if (setAOnly.length > 0) {
+                    if (setAOnly.length <= 3) {
+                        const textA = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textA.setAttribute('x', '100');
+                        textA.setAttribute('y', '150');
+                        textA.setAttribute('fill', '#000000');
+                        textA.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textA.setAttribute('font-size', '10');
+                        textA.setAttribute('text-anchor', 'middle');
+                        textA.textContent = setAOnly.join(', ');
+                        vennDiagram.appendChild(textA);
+                    } else {
+                        // First line
+                        const textA1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textA1.setAttribute('x', '100');
+                        textA1.setAttribute('y', '140');
+                        textA1.setAttribute('fill', '#000000');
+                        textA1.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textA1.setAttribute('font-size', '8');
+                        textA1.setAttribute('text-anchor', 'middle');
+                        
+                        // Second line
+                        const textA2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textA2.setAttribute('x', '100');
+                        textA2.setAttribute('y', '155');
+                        textA2.setAttribute('fill', '#000000');
+                        textA2.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textA2.setAttribute('font-size', '8');
+                        textA2.setAttribute('text-anchor', 'middle');
+                        
+                        if (setAOnly.length <= 6) {
+                            const midpoint = Math.ceil(setAOnly.length / 2);
+                            textA1.textContent = setAOnly.slice(0, midpoint).join(',');
+                            textA2.textContent = setAOnly.slice(midpoint).join(',');
+                        } else {
+                            textA1.textContent = setAOnly.slice(0, 3).join(',');
+                            textA2.textContent = '...+' + (setAOnly.length - 3);
+                        }
+                        
+                        vennDiagram.appendChild(textA1);
+                        vennDiagram.appendChild(textA2);
+                    }
+                }
+                
+                // Add pixel-art style elements for B only (right)
+                if (setBOnly.length > 0) {
+                    if (setBOnly.length <= 3) {
+                        const textB = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textB.setAttribute('x', '300');
+                        textB.setAttribute('y', '150');
+                        textB.setAttribute('fill', '#000000');
+                        textB.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textB.setAttribute('font-size', '10');
+                        textB.setAttribute('text-anchor', 'middle');
+                        textB.textContent = setBOnly.join(', ');
+                        vennDiagram.appendChild(textB);
+                    } else {
+                        // First line
+                        const textB1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textB1.setAttribute('x', '300');
+                        textB1.setAttribute('y', '140');
+                        textB1.setAttribute('fill', '#000000');
+                        textB1.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textB1.setAttribute('font-size', '8');
+                        textB1.setAttribute('text-anchor', 'middle');
+                        
+                        // Second line
+                        const textB2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textB2.setAttribute('x', '300');
+                        textB2.setAttribute('y', '155');
+                        textB2.setAttribute('fill', '#000000');
+                        textB2.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textB2.setAttribute('font-size', '8');
+                        textB2.setAttribute('text-anchor', 'middle');
+                        
+                        if (setBOnly.length <= 6) {
+                            const midpoint = Math.ceil(setBOnly.length / 2);
+                            textB1.textContent = setBOnly.slice(0, midpoint).join(',');
+                            textB2.textContent = setBOnly.slice(midpoint).join(',');
+                        } else {
+                            textB1.textContent = setBOnly.slice(0, 3).join(',');
+                            textB2.textContent = '...+' + (setBOnly.length - 3);
+                        }
+                        
+                        vennDiagram.appendChild(textB1);
+                        vennDiagram.appendChild(textB2);
+                    }
+                }
+                
+                // Add pixel-art style elements for intersection (middle)
+                if (intersectionSet.length > 0) {
+                    // Handle larger intersections with multiple text elements
+                    if (intersectionSet.length <= 3) {
+                        // For small sets, just display normally
+                        const textIntersection = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        textIntersection.setAttribute('x', '200');
+                        textIntersection.setAttribute('y', '150');
+                        textIntersection.setAttribute('fill', '#000000');
+                        textIntersection.setAttribute('font-family', '"Press Start 2P", cursive');
+                        textIntersection.setAttribute('font-size', '10');
+                        textIntersection.setAttribute('text-anchor', 'middle');
+                        textIntersection.textContent = intersectionSet.join(', ');
+                        vennDiagram.appendChild(textIntersection);
+                    } else {
+                        // For larger sets, split them into multiple lines
+                        const firstLine = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        firstLine.setAttribute('x', '200');
+                        firstLine.setAttribute('y', '140');
+                        firstLine.setAttribute('fill', '#000000');
+                        firstLine.setAttribute('font-family', '"Press Start 2P", cursive');
+                        firstLine.setAttribute('font-size', '8');
+                        firstLine.setAttribute('text-anchor', 'middle');
+                        
+                        const secondLine = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        secondLine.setAttribute('x', '200');
+                        secondLine.setAttribute('y', '155');
+                        secondLine.setAttribute('fill', '#000000');
+                        secondLine.setAttribute('font-family', '"Press Start 2P", cursive');
+                        secondLine.setAttribute('font-size', '8');
+                        secondLine.setAttribute('text-anchor', 'middle');
+                        
+                        if (intersectionSet.length <= 6) {
+                            // Split into two roughly equal lines
+                            const midpoint = Math.ceil(intersectionSet.length / 2);
+                            firstLine.textContent = intersectionSet.slice(0, midpoint).join(',');
+                            secondLine.textContent = intersectionSet.slice(midpoint).join(',');
+                        } else {
+                            // Show first few items and indicate there are more
+                            firstLine.textContent = intersectionSet.slice(0, 3).join(',');
+                            secondLine.textContent = '... ' + (intersectionSet.length - 3) + ' more';
+                        }
+                        
+                        vennDiagram.appendChild(firstLine);
+                        vennDiagram.appendChild(secondLine);
+                    }
+                }
+                
+                // Add pixel border effect to the area outside sets
+                for (let i = 0; i < 10; i++) {
+                    const pixelX = 30 + Math.random() * 340;
+                    const pixelY = 30 + Math.random() * 240;
+                    
+                    // Check if the pixel is outside both circles
+                    const distA = Math.sqrt(Math.pow(pixelX - 150, 2) + Math.pow(pixelY - 150, 2));
+                    const distB = Math.sqrt(Math.pow(pixelX - 250, 2) + Math.pow(pixelY - 150, 2));
+                    
+                    if (distA > 100 && distB > 100) {
+                        const pixel = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        pixel.setAttribute('x', pixelX);
+                        pixel.setAttribute('y', pixelY);
+                        pixel.setAttribute('width', '4');
+                        pixel.setAttribute('height', '4');
+                        pixel.setAttribute('fill', '#ffcc00');
+                        vennDiagram.appendChild(pixel);
+                    }
+                }
+            }
+            
+            // Calculate and display all set operations
+            function calculateSets() {
+                audio = new Audio('count.wav');
+                audio.play()
+                const setA = parseSetInput(setAInput.value);
+                const setB = parseSetInput(setBInput.value);
+                
+                const unionSet = union(setA, setB);
+                const intersectionSet = intersection(setA, setB);
+                const differenceAB = difference(setA, setB);
+                const differenceBA = difference(setB, setA);
+                
+                // Display results - handle long sets better
+                function formatSetForDisplay(set) {
+                    if (set.length === 0) return '∅';
+                    
+                    // If the set has many elements or long elements, we need to be careful with display
+                    const formattedElements = set.map(elem => {
+                        // For very long individual elements, truncate them
+                        if (elem.length > 15) {
+                            return elem.substring(0, 12) + '...';
+                        }
+                        return elem;
+                    });
+                    
+                    // Join all elements and check total length
+                    let result = formattedElements.join(', ');
+                    if (result.length > 100) {
+                        // If too long, show first few elements and indicate count
+                        return `{${formattedElements.slice(0, 5).join(', ')}, ... dan ${set.length - 5} lainnya}`;
+                    }
+                    
+                    return `{${result}}`;
+                }
+                
+                setADisplay.textContent = formatSetForDisplay(setA);
+                setBDisplay.textContent = formatSetForDisplay(setB);
+                unionDisplay.textContent = formatSetForDisplay(unionSet);
+                intersectionDisplay.textContent = formatSetForDisplay(intersectionSet);
+                differenceABDisplay.textContent = formatSetForDisplay(differenceAB);
+                differenceBADisplay.textContent = formatSetForDisplay(differenceBA);
+                
+                // Draw the Venn diagram
+                drawVennDiagram(setA, setB);
+                
+                // Add blink effect to results
+                const results = document.querySelector('.results');
+                results.style.animation = 'none';
+                setTimeout(() => {
+                    results.style.animation = 'blink 0.5s';
+                }, 10);
+            }
+            
+            // Event listener for the calculate button
+            calculateButton.addEventListener('click', calculateSets);
+            
+            // Also allow Enter key to calculate
+            setAInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateSets();
+            });
+            
+            setBInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateSets();
+            });
+            
+            // Initialize with empty diagram
+            drawVennDiagram([], []);
+            
+            // Add some retro effects
+            document.querySelectorAll('input, button').forEach(element => {
+                element.addEventListener('mouseover', () => {
+                    const audio = new Audio();
+                    audio.volume = 0.2;
+                    audio.src = 'data:audio/mpeg;base64,SUQzBAAAAAAAFlRSQ0sAAAADAAAAAAAAAFRQRTEAAAADAAAAAFRJVDIAAAADAAAAAFRBTEIAAAADAAAAAFRZRVIAAAADAAAAAFRDT04AAAADAAAAAFR4WFgAAAADAAAAAERJUgAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuOTlyAc0AAAAAAAAAABSAJAJAQgAAgAAAGkFw5LR4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuOTlyAc0AAAAAAAAAABSAJAJAQgAAgAAAGkFw5LR4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAETEFNRTMuOTlyAc0AAAAAAAAAABSAJAJAQgAAgAAAGkFw5LR4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+                    audio.play();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
