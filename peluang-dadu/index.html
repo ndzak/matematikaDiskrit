@@ -147,6 +147,17 @@
             display: none;
         }
 
+        .formula {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--dark);
+        }
+
+        .formula span {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
         @media (min-width: 768px) {
             .container {
                 flex-direction: row;
@@ -201,6 +212,14 @@
             <div id="resultInfo" class="result hidden">
                 <p>Peluang mendapatkan <span id="targetDisplay"></span> dalam <span id="trialsDisplay"></span> kali percobaan adalah: <span id="probabilityResult"></span></p>
                 <p>Frekuensi kemunculan: <span id="frequency"></span> kali</p>
+                <p class="formula">
+                    Rumus Probabilitas (Empiris): <br>
+                    <span>P(kejadian) = Jumlah Kemunculan / Total Percobaan</span>
+                </p>
+                <p id="theoreticalFormula" class="formula hidden">
+                    Rumus Probabilitas (Teoritis): <br>
+                    <span id="formulaText"></span>
+                </p>
             </div>
         </div>
     </div>
@@ -221,6 +240,9 @@
         const trialsDisplay = document.getElementById('trialsDisplay');
         const probabilityResult = document.getElementById('probabilityResult');
         const frequencyDisplay = document.getElementById('frequency');
+        const theoreticalFormulaDiv = document.getElementById('theoreticalFormula'); // New element
+        const formulaTextSpan = document.getElementById('formulaText'); // New element
+
 
         function resizeCanvas() {
             const container = canvas.parentElement;
@@ -353,6 +375,25 @@
             return finalValues;
         }
 
+        // Fungsi untuk menghitung jumlah cara mendapatkan total tertentu dengan N dadu
+        // Ini adalah fungsi helper untuk probabilitas teoritis dadu > 1
+        function countWays(numDice, targetSum) {
+            const dp = Array(numDice + 1).fill(0).map(() => Array(targetSum + 1).fill(0));
+            dp[0][0] = 1;
+
+            for (let i = 1; i <= numDice; i++) {
+                for (let j = 1; j <= targetSum; j++) {
+                    for (let face = 1; face <= 6; face++) {
+                        if (j - face >= 0) {
+                            dp[i][j] += dp[i - 1][j - face];
+                        }
+                    }
+                }
+            }
+            return dp[numDice][targetSum];
+        }
+
+
         function runSimulation() {
             const diceCount = parseInt(diceCountInput.value);
             const trials = parseInt(trialsInput.value);
@@ -388,7 +429,8 @@
             
             startBtn.disabled = true;
             resultInfo.classList.add('hidden');
-            
+            theoreticalFormulaDiv.classList.add('hidden'); // Sembunyikan rumus teoritis dulu
+
             animateDice(diceCount, function(firstResults) {
                 let successCount = 0;
                 
@@ -424,7 +466,20 @@
                 probabilityResult.textContent = `${probability.toFixed(2)}%`;
                 frequencyDisplay.textContent = successCount;
                 resultInfo.classList.remove('hidden');
-                
+
+                // Menentukan dan menampilkan rumus probabilitas teoritis
+                let theoreticalProbText = "";
+                if (diceCount === 1) {
+                    theoreticalProbText = `P(angka ${targetNumber}) = 1 / 6 = ${((1/6)*100).toFixed(2)}%`;
+                } else {
+                    const ways = countWays(diceCount, targetNumber);
+                    const totalOutcomes = Math.pow(6, diceCount);
+                    const theoreticalProb = (ways / totalOutcomes) * 100;
+                    theoreticalProbText = `P(total ${targetNumber}) = ${ways} / ${totalOutcomes} = ${theoreticalProb.toFixed(2)}%`;
+                }
+                formulaTextSpan.textContent = theoreticalProbText;
+                theoreticalFormulaDiv.classList.remove('hidden'); // Tampilkan rumus teoritis
+
                 startBtn.disabled = false;
             });
         }
@@ -440,6 +495,7 @@
             targetInputDiv.classList.remove('hidden');
             targetSumDiv.classList.add('hidden');
             resultInfo.classList.add('hidden');
+            theoreticalFormulaDiv.classList.add('hidden'); // Sembunyikan juga saat reset
             
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         });

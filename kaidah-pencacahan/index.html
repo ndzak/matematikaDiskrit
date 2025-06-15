@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Kalkulator Kaidah Pencacahan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            margin-top: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            color: #34495e;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .calculator-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .calculation-type {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .type-btn {
+            padding: 15px 20px;
+            border: 2px solid #bdc3c7;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1em;
+            position: relative;
+        }
+
+        .type-btn:hover {
+            border-color: #3498db;
+            background: #ebf3fd;
+            transform: translateY(-2px);
+        }
+
+        .type-btn.active {
+            border-color: #3498db;
+            background: #3498db;
+            color: white;
+        }
+
+        .type-btn h3 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .type-btn .formula {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-weight: normal;
+        }
+
+        .type-btn.active .formula {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .input-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .input-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .calculate-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background: #2980b9;
+        }
+
+        .calculate-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .result-explanation {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            color: #3498db;
+            margin-left: 5px;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .calculation-type {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-section {
+                padding: 20px;
+            }
+        }
+
+        .formula-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            border: 1px solid #e9ecef;
+        }
+        
+        .button-exit{
+            background-color: white;
+            text-decoration: none;
+            color: black;
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="button-exit">
+            <i class="fa-solid fa-arrow-left"></i> Menu
+        </a>
+        <header>
+            <h1>🧮 Kalkulator Kaidah Pencacahan</h1>
+            <p class="subtitle">Alat bantu interaktif untuk memahami konsep pencacahan dalam matematika</p>
+        </header>
+
+        <div class="intro">
+            <h2>Apa itu Kaidah Pencacahan?</h2>
+            <p><strong>Kaidah Pencacahan</strong> adalah metode untuk menghitung banyaknya cara suatu peristiwa dapat terjadi. Konsep ini sangat penting dalam matematika diskrit dan statistika.</p>
+            <p><strong>Permutasi</strong> menghitung susunan objek di mana urutan penting, <strong>Kombinasi</strong> menghitung pemilihan objek di mana urutan tidak penting, dan <strong>Kaidah Perkalian</strong> menghitung total kemungkinan dari beberapa tahap kejadian.</p>
+        </div>
+
+        <div class="calculator-section">
+            <h2 class="section-title">Pilih Jenis Pencacahan</h2>
+            
+            <div class="calculation-type">
+                <div class="type-btn" data-type="permutation">
+                    <h3>Permutasi</h3>
+                    <div class="formula">P(n,r) = n!/(n-r)!</div>
+                </div>
+                <div class="type-btn" data-type="permutation-repeat">
+                    <h3>Permutasi Berulang</h3>
+                    <div class="formula">n^r</div>
+                </div>
+                <div class="type-btn" data-type="combination">
+                    <h3>Kombinasi</h3>
+                    <div class="formula">C(n,r) = n!/(r!(n-r)!)</div>
+                </div>
+                <div class="type-btn" data-type="multiplication">
+                    <h3>Kaidah Perkalian</h3>
+                    <div class="formula">n₁ × n₂ × ... × nₖ</div>
+                </div>
+            </div>
+
+            <!-- Input Section for Permutation -->
+            <div class="input-section" id="permutation-inputs">
+                <h3>Permutasi Tanpa Pengulangan <span class="tooltip" data-tooltip="Susunan r objek dari n objek berbeda, urutan penting">ℹ️</span></h3>
+                <div class="formula-display">P(n,r) = n! / (n-r)!</div>
+                <div class="input-group">
+                    <label for="perm-n">Jumlah total objek (n):</label>
+                    <input type="number" id="perm-n" min="0" placeholder="Contoh: 5">
+                </div>
+                <div class="input-group">
+                    <label for="perm-r">Jumlah objek yang dipilih (r):</label>
+                    <input type="number" id="perm-r" min="0" placeholder="Contoh: 3">
+                </div>
+                <button class="calculate-btn" onclick="calculatePermutation()">Hitung Permutasi</button>
+                <div class="result-section" id="perm-result"></div>
+            </div>
+
+            <!-- Input Section for Permutation with Repetition -->
+            <div class="input-section" id="permutation-repeat-inputs">
+                <h3>Permutasi dengan Pengulangan <span class="tooltip" data-tooltip="Susunan r objek dari n jenis objek, objek boleh berulang">ℹ️</span></h3>
+                <div class="formula-display">P = n^r</div>
+                <div class="input-group">
+                    <label for="perm-rep-n">Jumlah jenis objek (n):</label>
+                    <input type="number" id="perm-rep-n" min="1" placeholder="Contoh: 4">
+                </div>
+                <div class="input-group">
+                    <label for="perm-rep-r">Jumlah posisi (r):</label>
+                    <input type="number" id="perm-rep-r" min="0" placeholder="Contoh: 3">
+                </div>
+                <button class="calculate-btn" onclick="calculatePermutationRepeat()">Hitung Permutasi Berulang</button>
+                <div class="result-section" id="perm-rep-result"></div>
+            </div>
+
+            <!-- Input Section for Combination -->
+            <div class="input-section" id="combination-inputs">
+                <h3>Kombinasi <span class="tooltip" data-tooltip="Pemilihan r objek dari n objek, urutan tidak penting">ℹ️</span></h3>
+                <div class="formula-display">C(n,r) = n! / (r! × (n-r)!)</div>
+                <div class="input-group">
+                    <label for="comb-n">Jumlah total objek (n):</label>
+                    <input type="number" id="comb-n" min="0" placeholder="Contoh: 10">
+                </div>
+                <div class="input-group">
+                    <label for="comb-r">Jumlah objek yang dipilih (r):</label>
+                    <input type="number" id="comb-r" min="0" placeholder="Contoh: 3">
+                </div>
+                <button class="calculate-btn" onclick="calculateCombination()">Hitung Kombinasi</button>
+                <div class="result-section" id="comb-result"></div>
+            </div>
+
+            <!-- Input Section for Multiplication Rule -->
+            <div class="input-section" id="multiplication-inputs">
+                <h3>Kaidah Perkalian <span class="tooltip" data-tooltip="Total cara melakukan beberapa tahap kejadian berurutan">ℹ️</span></h3>
+                <div class="formula-display">Total = n₁ × n₂ × n₃ × ...</div>
+                <div class="input-group">
+                    <label for="mult-values">Masukkan nilai-nilai (pisahkan dengan koma):</label>
+                    <input type="text" id="mult-values" placeholder="Contoh: 3, 4, 5, 2">
+                </div>
+                <button class="calculate-btn" onclick="calculateMultiplication()">Hitung Kaidah Perkalian</button>
+                <div class="result-section" id="mult-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Factorial function
+        function factorial(n) {
+            if (n <= 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Format large numbers with commas
+        function formatNumber(num) {
+            return num.toLocaleString('id-ID');
+        }
+
+        // Handle type selection
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons and sections
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.input-section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding input section
+                const type = this.dataset.type;
+                document.getElementById(type + '-inputs').classList.add('active');
+            });
+        });
+
+        // Calculate Permutation
+        function calculatePermutation() {
+            const n = parseInt(document.getElementById('perm-n').value);
+            const r = parseInt(document.getElementById('perm-r').value);
+            const resultDiv = document.getElementById('perm-result');
+
+            // Validation
+            if (isNaN(n) || isNaN(r) || n < 0 || r < 0) {
+                resultDiv.innerHTML = '<div class="error">Harap masukkan nilai yang valid (bilangan bulat positif)</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            if (r > n) {
+                resultDiv.innerHTML = '<div class="error">Nilai r tidak boleh lebih besar dari n</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            // Calculate
+            try {
+                const result = factorial(n) / factorial(n - r);
+                
+                resultDiv.innerHTML = `
+                    <div class="result-value">P(${n}, ${r}) = ${formatNumber(result)}</div>
+                    <div class="result-explanation">
+                        <strong>Penjelasan:</strong><br>
+                        Permutasi ${r} objek dari ${n} objek berbeda adalah ${formatNumber(result)} cara.<br>
+                        Rumus: P(${n}, ${r}) = ${n}! / (${n}-${r})! = ${formatNumber(factorial(n))} / ${formatNumber(factorial(n-r))} = ${formatNumber(result)}
+                    </div>
+                `;
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">Nilai terlalu besar untuk dihitung</div>';
+                resultDiv.classList.add('show');
+            }
+        }
+
+        // Calculate Permutation with Repetition
+        function calculatePermutationRepeat() {
+            const n = parseInt(document.getElementById('perm-rep-n').value);
+            const r = parseInt(document.getElementById('perm-rep-r').value);
+            const resultDiv = document.getElementById('perm-rep-result');
+
+            // Validation
+            if (isNaN(n) || isNaN(r) || n < 1 || r < 0) {
+                resultDiv.innerHTML = '<div class="error">Harap masukkan nilai yang valid (n ≥ 1, r ≥ 0)</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            // Calculate
+            try {
+                const result = Math.pow(n, r);
+                
+                resultDiv.innerHTML = `
+                    <div class="result-value">${formatNumber(result)}</div>
+                    <div class="result-explanation">
+                        <strong>Penjelasan:</strong><br>
+                        Permutasi ${r} objek dari ${n} jenis objek (boleh berulang) adalah ${formatNumber(result)} cara.<br>
+                        Rumus: ${n}^${r} = ${formatNumber(result)}
+                    </div>
+                `;
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">Nilai terlalu besar untuk dihitung</div>';
+                resultDiv.classList.add('show');
+            }
+        }
+
+        // Calculate Combination
+        function calculateCombination() {
+            const n = parseInt(document.getElementById('comb-n').value);
+            const r = parseInt(document.getElementById('comb-r').value);
+            const resultDiv = document.getElementById('comb-result');
+
+            // Validation
+            if (isNaN(n) || isNaN(r) || n < 0 || r < 0) {
+                resultDiv.innerHTML = '<div class="error">Harap masukkan nilai yang valid (bilangan bulat positif)</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            if (r > n) {
+                resultDiv.innerHTML = '<div class="error">Nilai r tidak boleh lebih besar dari n</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            // Calculate
+            try {
+                const result = factorial(n) / (factorial(r) * factorial(n - r));
+                
+                resultDiv.innerHTML = `
+                    <div class="result-value">C(${n}, ${r}) = ${formatNumber(result)}</div>
+                    <div class="result-explanation">
+                        <strong>Penjelasan:</strong><br>
+                        Kombinasi ${r} objek dari ${n} objek adalah ${formatNumber(result)} cara.<br>
+                        Rumus: C(${n}, ${r}) = ${n}! / (${r}! × (${n}-${r})!) = ${formatNumber(factorial(n))} / (${formatNumber(factorial(r))} × ${formatNumber(factorial(n-r))}) = ${formatNumber(result)}
+                    </div>
+                `;
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">Nilai terlalu besar untuk dihitung</div>';
+                resultDiv.classList.add('show');
+            }
+        }
+
+        // Calculate Multiplication Rule
+        function calculateMultiplication() {
+            const input = document.getElementById('mult-values').value;
+            const resultDiv = document.getElementById('mult-result');
+
+            // Validation
+            if (!input.trim()) {
+                resultDiv.innerHTML = '<div class="error">Harap masukkan nilai-nilai yang valid</div>';
+                resultDiv.classList.add('show');
+                return;
+            }
+
+            try {
+                const values = input.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v) && v > 0);
+                
+                if (values.length === 0) {
+                    resultDiv.innerHTML = '<div class="error">Tidak ada nilai valid yang ditemukan</div>';
+                    resultDiv.classList.add('show');
+                    return;
+                }
+
+                const result = values.reduce((acc, val) => acc * val, 1);
+                
+                resultDiv.innerHTML = `
+                    <div class="result-value">${formatNumber(result)}</div>
+                    <div class="result-explanation">
+                        <strong>Penjelasan:</strong><br>
+                        Total cara melakukan ${values.length} tahap kejadian berurutan adalah ${formatNumber(result)} cara.<br>
+                        Perhitungan: ${values.join(' × ')} = ${formatNumber(result)}
+                    </div>
+                `;
+                resultDiv.classList.add('show');
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">Terjadi kesalahan dalam perhitungan</div>';
+                resultDiv.classList.add('show');
+            }
+        }
+
+        // Enable real-time calculation on Enter key press
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeSection = document.querySelector('.input-section.active');
+                if (activeSection) {
+                    const button = activeSection.querySelector('.calculate-btn');
+                    if (button) button.click();
+                }
+            }
+        });
+
+        // Clear results when switching types
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.result-section').forEach(section => {
+                    section.classList.remove('show');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
